@@ -1,6 +1,6 @@
 	db DEX_CHARIZARD ; pokedex id
 
-	db  78,  84,  78, 100,  85
+	db  98, 104,  78, 120, 105
 	;   hp  atk  def  spd  spc
 
 	db FIRE, FLYING ; type
@@ -23,7 +23,7 @@ ENDC
 	     SEISMIC_TOSS, RAGE,         DRAGON_RAGE,  EARTHQUAKE,   FISSURE,      \
 	     DIG,          MIMIC,        DOUBLE_TEAM,  REFLECT,      BIDE,         \
 	     FIRE_BLAST,   SWIFT,        SKULL_BASH,   REST,         SUBSTITUTE,   \
-	     CUT,          STRENGTH
+	     CUT,          STRENGTH,     PAY_DAY
 	; end
 
 	db BANK(CharizardPicFront)

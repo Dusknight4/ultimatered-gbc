@@ -960,7 +960,8 @@ SkullBashAnim:
 	db -1 ; end
 
 SpikeCannonAnim:
-	battle_anim SPIKE_CANNON, SUBANIM_1_STAR_BIG_MOVING, 1, 4
+	battle_anim FURY_ATTACK, SUBANIM_0_HORN_JAB_THRICE, 0, 2
+	battle_anim NO_MOVE, SUBANIM_0_HORN_JAB_THRICE, 0, 2
 	db -1 ; end
 
 ConstrictAnim:

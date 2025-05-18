@@ -1,6 +1,6 @@
 	db DEX_SCYTHER ; pokedex id
 
-	db  70, 110,  80, 105,  55
+	db  80, 120,  80, 150,  65
 	;   hp  atk  def  spd  spc
 
 	db BUG, FLYING ; type
@@ -20,7 +20,8 @@ ENDC
 	; tm/hm learnset
 	tmhm SWORDS_DANCE, TOXIC,        TAKE_DOWN,    DOUBLE_EDGE,  HYPER_BEAM,   \
 	     RAGE,         MIMIC,        DOUBLE_TEAM,  BIDE,         SWIFT,        \
-	     SKULL_BASH,   REST,         SUBSTITUTE,   CUT
+	     SKULL_BASH,   REST,         SUBSTITUTE,   CUT,          FLY,          \
+	     PAY_DAY
 	; end
 
 	db BANK(ScytherPicFront)

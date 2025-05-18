@@ -65,9 +65,9 @@ DeterminePaletteID:
 	ld [wPokedexNum], a
 	and a
 
-	push bc
-	predef IndexToPokedex ; turn Pokemon ID number into Pokedex number
-	pop bc
+	;push bc
+	;predef IndexToPokedex ; turn Pokemon ID number into Pokedex number
+	;pop bc
 
 	ld a, [wPokedexNum]
 	ld hl, MonsterPalettes
@@ -108,9 +108,9 @@ DetermineBackSpritePaletteID:
 	ld [wPokedexNum], a
 	and a
 
-	push bc
-	predef IndexToPokedex ; turn Pokemon ID number into Pokedex number
-	pop bc
+	;push bc
+	;predef IndexToPokedex ; turn Pokemon ID number into Pokedex number
+	;pop bc
 
 	ld a, [wPokedexNum]
 	ld hl, MonsterPalettes

@@ -839,27 +839,86 @@ FaintEnemyPokemon:
 	dec b
 	jr nz, .halveExpDataLoop
 
-; give exp (divided evenly) to the mons that actually fought in battle against the enemy mon that has fainted
-; if exp all is in the bag, this will be only be half of the stat exp and normal exp, due to the above loop
 .giveExpToMonsThatFought
 	xor a
 	ld [wBoostExpByExpAll], a
 	callfar GainExperience
 	pop af
-	ret z ; return if no exp all
+	ret z ; return if no EXP.ALL
 
-; the player has exp all
-; now, set the gain exp flag for every party member
-; half of the total stat exp and normal exp will divided evenly amongst every party member
 	ld a, TRUE
 	ld [wBoostExpByExpAll], a
-	ld a, [wPartyCount]
-	ld b, 0
-.gainExpFlagsLoop
-	scf
-	rl b
-	dec a
-	jr nz, .gainExpFlagsLoop
+	xor a
+	ld [wPartyGainExpFlags], a
+
+	ld b, 0 ; bitfield
+
+	; Slot 1 (bit 0)
+	ld hl, wPartyMon1HP
+	ld a, [hl]
+	inc hl
+	or [hl]
+	jr z, .check2
+	ld a, b
+	or 1 << 0
+	ld b, a
+
+.check2
+	; Slot 2 (bit 1)
+	ld hl, wPartyMon2HP
+	ld a, [hl]
+	inc hl
+	or [hl]
+	jr z, .check3
+	ld a, b
+	or 1 << 1
+	ld b, a
+
+.check3
+	; Slot 3 (bit 2)
+	ld hl, wPartyMon3HP
+	ld a, [hl]
+	inc hl
+	or [hl]
+	jr z, .check4
+	ld a, b
+	or 1 << 2
+	ld b, a
+
+.check4
+	; Slot 4 (bit 3)
+	ld hl, wPartyMon4HP
+	ld a, [hl]
+	inc hl
+	or [hl]
+	jr z, .check5
+	ld a, b
+	or 1 << 3
+	ld b, a
+
+.check5
+	; Slot 5 (bit 4)
+	ld hl, wPartyMon5HP
+	ld a, [hl]
+	inc hl
+	or [hl]
+	jr z, .check6
+	ld a, b
+	or 1 << 4
+	ld b, a
+
+.check6
+	; Slot 6 (bit 5)
+	ld hl, wPartyMon6HP
+	ld a, [hl]
+	inc hl
+	or [hl]
+	jr z, .done
+	ld a, b
+	or 1 << 5
+	ld b, a
+
+.done
 	ld a, b
 	ld [wPartyGainExpFlags], a
 	jpfar GainExperience
@@ -6146,14 +6205,33 @@ LoadEnemyMonData:
 	jr nz, .storeDVs
 	ld a, [wIsInBattle]
 	cp $2 ; is it a trainer battle?
-; fixed DVs for trainer mon
-	ld a, ATKDEFDV_TRAINER
-	ld b, SPDSPCDV_TRAINER
+; random DVs for trainer mon
+.GenerateTrainerFirstByte:
+	call BattleRandom
+	cp $0
+	jr c, .GenerateTrainerFirstByte
+	cp $97
+	jr nc, .GenerateTrainerFirstByte
+	ld b, a                     ; constrained Speed/Special
+
+	;call BattleRandom
+	ld a, $99                     ; Atk/Def (no constraint)
 	jr z, .storeDVs
+
 ; random DVs for wild mon
+.GenerateFirstByte:
 	call BattleRandom
-	ld b, a
-	call BattleRandom
+	cp $0
+	jr c, .GenerateFirstByte    ; retry if less than $25
+	cp $97
+	jr nc, .GenerateFirstByte   ; retry if >= $EC (must be < EC to be ≤ EB)
+	ld b, a                     ; store constrained value for Speed/Special
+
+	call BattleRandom           ; second, fully random byte (Atk/Def)
+	ld hl, wEnemyMonDVs
+	ld [hli], a                 ; store Atk/Def
+	ld [hl], b                  ; store Speed/Special (constrained)
+
 .storeDVs
 	ld hl, wEnemyMonDVs
 	ld [hli], a
@@ -6166,6 +6244,16 @@ LoadEnemyMonData:
 	ld hl, wEnemyMonHP
 	push hl
 	call CalcStats
+	; Update the party struct's HP with the newly calculated Max HP
+	ld hl, wEnemyMon1HP
+	ld a, [wWhichPokemon]
+	ld bc, wEnemyMon2 - wEnemyMon1
+	call AddNTimes
+	ld a, [wEnemyMonMaxHP]
+	ld [hli], a
+	ld a, [wEnemyMonMaxHP + 1]
+	ld [hli], a
+
 	pop hl
 	ld a, [wIsInBattle]
 	cp $2 ; is it a trainer battle?
@@ -6820,34 +6908,34 @@ DetermineWildOpponent:
 	ret nz
 	callfar TryDoWildEncounter
 	ret nz
-InitBattleCommon:
-	ld a, [wMapPalOffset]
-	push af
-	ld hl, wLetterPrintingDelayFlags
-	ld a, [hl]
-	push af
-	res BIT_TEXT_DELAY, [hl] ; no delay
-	callfar InitBattleVariables
-	ld a, [wEnemyMonSpecies2]
-	sub OPP_ID_OFFSET
-	jp c, InitWildBattle
-	ld [wTrainerClass], a
-	call GetTrainerInformation
-	callfar ReadTrainer
-	call DoBattleTransitionAndInitBattleVariables
-	call _LoadTrainerPic
-	xor a
-	ld [wEnemyMonSpecies2], a
-	ldh [hStartTileID], a
-	dec a
-	ld [wAICount], a
-	hlcoord 12, 0
-	predef CopyUncompressedPicToTilemap
-	ld a, $ff
-	ld [wEnemyMonPartyPos], a
-	ld a, $2
-	ld [wIsInBattle], a
-	jp _InitBattleCommon
+	InitBattleCommon:
+		ld a, [wMapPalOffset]
+		push af
+		ld hl, wLetterPrintingDelayFlags
+		ld a, [hl]
+		push af
+		res BIT_TEXT_DELAY, [hl] ; no delay
+		callfar InitBattleVariables
+		ld a, [wEnemyMonSpecies2]
+		sub OPP_ID_OFFSET
+		jp c, InitWildBattle
+		ld [wTrainerClass], a
+		call GetTrainerInformation
+		callfar ReadTrainer
+		call DoBattleTransitionAndInitBattleVariables
+		call _LoadTrainerPic
+		xor a
+		ld [wEnemyMonDVs + 1], a
+		ldh [hStartTileID], a
+		dec a
+		ld [wAICount], a
+		hlcoord 12, 0
+		predef CopyUncompressedPicToTilemap
+		ld a, $ff
+		ld [wEnemyMonPartyPos], a
+		ld a, $2
+		ld [wIsInBattle], a
+		jp _InitBattleCommon
 
 InitWildBattle:
 	ld a, $1

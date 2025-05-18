@@ -1,6 +1,6 @@
 	db DEX_OMASTAR ; pokedex id
 
-	db  70,  60, 125,  55, 115
+	db  100, 75, 145, 65, 130
 	;   hp  atk  def  spd  spc
 
 	db ROCK, WATER ; type
@@ -22,7 +22,7 @@ ENDC
 	     BUBBLEBEAM,   WATER_GUN,    ICE_BEAM,     BLIZZARD,     HYPER_BEAM,   \
 	     SUBMISSION,   SEISMIC_TOSS, RAGE,         MIMIC,        DOUBLE_TEAM,  \
 	     REFLECT,      BIDE,         SKULL_BASH,   REST,         SUBSTITUTE,   \
-	     SURF
+	     SURF,         PAY_DAY
 	; end
 
 	db BANK(OmastarPicFront)

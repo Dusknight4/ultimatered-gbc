@@ -1,6 +1,6 @@
 	db DEX_BEEDRILL ; pokedex id
 
-	db  65,  80,  40,  75,  45
+	db  75,  95,  60,  115,  65
 	;   hp  atk  def  spd  spc
 
 	db BUG, POISON ; type
@@ -21,7 +21,7 @@ ENDC
 	tmhm SWORDS_DANCE, TOXIC,        TAKE_DOWN,    DOUBLE_EDGE,  HYPER_BEAM,   \
 	     RAGE,         MEGA_DRAIN,   MIMIC,        DOUBLE_TEAM,  REFLECT,      \
 	     BIDE,         SWIFT,        SKULL_BASH,   REST,         SUBSTITUTE,   \
-	     CUT
+	     CUT,          HORN_DRILL,   FLY,          PAY_DAY
 	; end
 
 	db BANK(BeedrillPicFront)

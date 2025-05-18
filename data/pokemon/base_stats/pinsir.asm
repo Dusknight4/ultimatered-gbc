@@ -1,6 +1,6 @@
 	db DEX_PINSIR ; pokedex id
 
-	db  65, 125, 100,  85,  55
+	db  105, 133, 110,  90,  85
 	;   hp  atk  def  spd  spc
 
 	db BUG, BUG ; type
@@ -21,7 +21,7 @@ ENDC
 	tmhm SWORDS_DANCE, TOXIC,        BODY_SLAM,    TAKE_DOWN,    DOUBLE_EDGE,  \
 	     HYPER_BEAM,   SUBMISSION,   SEISMIC_TOSS, RAGE,         MIMIC,        \
 	     DOUBLE_TEAM,  BIDE,         REST,         SUBSTITUTE,   CUT,          \
-	     STRENGTH
+	     STRENGTH,     DIG,          PAY_DAY
 	; end
 
 	db BANK(PinsirPicFront)

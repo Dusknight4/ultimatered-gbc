@@ -1,6 +1,6 @@
 	db DEX_VENUSAUR ; pokedex id
 
-	db  80,  82,  83,  80, 100
+	db  120,  82,  83,  80, 100
 	;   hp  atk  def  spd  spc
 
 	db GRASS, POISON ; type
@@ -21,7 +21,7 @@ ENDC
 	tmhm SWORDS_DANCE, TOXIC,        BODY_SLAM,    TAKE_DOWN,    DOUBLE_EDGE,  \
 	     HYPER_BEAM,   RAGE,         MEGA_DRAIN,   SOLARBEAM,    MIMIC,        \
 	     DOUBLE_TEAM,  REFLECT,      BIDE,         REST,         SUBSTITUTE,   \
-	     CUT
+	     CUT,          PAY_DAY
 	; end
 
 	db BANK(VenusaurPicFront)

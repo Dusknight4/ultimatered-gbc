@@ -1,6 +1,6 @@
 	db DEX_KINGLER ; pokedex id
 
-	db  55, 130, 115,  75,  50
+	db  55, 130, 115,  75,  80
 	;   hp  atk  def  spd  spc
 
 	db WATER, WATER ; type
@@ -21,7 +21,7 @@ ENDC
 	tmhm SWORDS_DANCE, TOXIC,        BODY_SLAM,    TAKE_DOWN,    DOUBLE_EDGE,  \
 	     BUBBLEBEAM,   WATER_GUN,    ICE_BEAM,     BLIZZARD,     HYPER_BEAM,   \
 	     RAGE,         MIMIC,        DOUBLE_TEAM,  BIDE,         REST,         \
-	     SUBSTITUTE,   CUT,          SURF,         STRENGTH
+	     SUBSTITUTE,   CUT,          SURF,         STRENGTH,     PAY_DAY
 	; end
 
 	db BANK(KinglerPicFront)

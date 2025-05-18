@@ -119,9 +119,8 @@ IsItemHM::
 ; sets carry if move is an HM, clears carry if move is not an HM
 ; Input: a = move ID
 IsMoveHM::
-	ld hl, HMMoves
-	ld de, 1
-	jp IsInArray
+	xor a
+	ret ; now YOU must return, since you're not calling any other function
 
 HMMoves::
 INCLUDE "data/moves/hm_moves.asm"

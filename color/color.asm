@@ -92,12 +92,12 @@ SetPal_Battle_Common:
 	jr .getEnemyMonPal
 
 .getBattleMonPal
-	ld a, [wBattleMonSpecies]        ; player Pokemon ID
+	ld a, [wBattleMonDVs + 1]        ; player Pokemon ID
 	call DetermineBackSpritePaletteID
 	ld b, a
 
 .getEnemyMonPal
-	ld a, [wEnemyMonSpecies2]         ; enemy Pokemon ID (without transform effect?)
+	ld a, [wEnemyMonDVs + 1]         ; enemy Pokemon ID (without transform effect?)
 	call DeterminePaletteID
 	ld c, a
 
@@ -268,18 +268,30 @@ SetPal_TownMap:
 
 ; Status screen
 SetPal_StatusScreen:
-	ld a, [wCurPartySpecies]
+	ld a, [wMonDataLocation]
+	and $f
+	ld hl, $D187              ; Speed/Special DV of PartyMon1
+	ld bc, $2C                ; PARTYMON_STRUCT_LENGTH
+	jr z, .gotBase
+	ld hl, wBoxMon1DVs + 1    ; Speed/Special DV of BoxMon1
+	ld bc, BOXMON_STRUCT_LENGTH
+.gotBase
+	ld a, [wWhichPokemon]
+	call AddNTimes            ; HL = pointer to desired Speed/Special DV
+	ld a, [hl]                ; A = DV value
+
 	cp NUM_POKEMON_INDEXES + 1
 	jr c, .pokemon
-	ld a, $1 ; not pokemon
-.pokemon
-	call DeterminePaletteID
+	ld a, $01                 ; fallback palette
+.pokemon:
+	call DeterminePaletteID   ; map DV to color palette
 	ld b, a
 
-	ld a, 2
+	ld a, $02
 	ldh [rSVBK], a
 
-	push bc
+	push bc                  ; only if this is called as a function
+
 
 	; Load Lifebar palette
 	ld a, [wStatusScreenHPBarColor]
@@ -725,9 +737,25 @@ SetPal_PokemonWholeScreen:
 	cp 2
 	ld a, PAL_MEWMON
 	jr z, .loadPalette
-	ld a, [wWholeScreenPaletteMonSpecies]
-	; Use the "BackSprite" version for the player sprite in the hall of fame.
-	call DetermineBackSpritePaletteID
+
+	; mimic status screen logic
+	ld a, [wMonDataLocation]
+	and $f
+	ld hl, $D187              ; Speed/Special DV of PartyMon1 (bank 0, safe hardcoded address)
+	ld bc, $2C                ; PARTYMON_STRUCT_LENGTH
+	jr z, .gotBase
+	ld hl, wBoxMon1DVs + 1    ; Speed/Special DV of BoxMon1
+	ld bc, BOXMON_STRUCT_LENGTH
+.gotBase
+	ld a, [wWhichPokemon]
+	call AddNTimes            ; HL = pointer to desired Speed/Special DV
+	ld a, [hl]                ; A = DV value (Speed/Special)
+
+	cp NUM_POKEMON_INDEXES + 1
+	jr c, .pokemon
+	ld a, $01                 ; fallback palette
+.pokemon:
+	call DetermineBackSpritePaletteID ; map DV → palette
 
 .loadPalette
 	ld d, a

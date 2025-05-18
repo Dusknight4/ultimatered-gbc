@@ -8,7 +8,7 @@ NoThanksText:
 
 PrizeMenuMon1Entries:
 	db ABRA
-	db CLEFAIRY
+	db MEOWTH
 IF DEF(_RED)
 	db NIDORINA
 ENDC
@@ -32,10 +32,10 @@ ENDC
 PrizeMenuMon2Entries:
 IF DEF(_RED)
 	db DRATINI
-	db SCYTHER
+	db PINSIR
 ENDC
 IF DEF(_BLUE)
-	db PINSIR
+	db SCYTHER
 	db DRATINI
 ENDC
 	db PORYGON
@@ -44,12 +44,12 @@ ENDC
 PrizeMenuMon2Cost:
 IF DEF(_RED)
 	bcd2 2800
-	bcd2 5500
+	bcd2 3500
 	bcd2 9999
 ENDC
 IF DEF(_BLUE)
 	bcd2 2500
-	bcd2 4600
+	bcd2 3500
 	bcd2 6500
 ENDC
 	db "@"

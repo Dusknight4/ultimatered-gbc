@@ -1,11 +1,11 @@
 	db DEX_PARASECT ; pokedex id
 
-	db  60,  95,  80,  30,  80
+	db  120,  95,  80,  64,  90
 	;   hp  atk  def  spd  spc
 
 	db BUG, GRASS ; type
 	db 75 ; catch rate
-	db 128 ; base exp
+	db 188 ; base exp
 
 IF GEN_2_GRAPHICS
 	INCBIN "gfx/pokemon/gsfront/parasect.pic", 0, 1 ; sprite dimensions
@@ -21,7 +21,7 @@ ENDC
 	tmhm SWORDS_DANCE, TOXIC,        BODY_SLAM,    TAKE_DOWN,    DOUBLE_EDGE,  \
 	     HYPER_BEAM,   RAGE,         MEGA_DRAIN,   SOLARBEAM,    DIG,          \
 	     MIMIC,        DOUBLE_TEAM,  REFLECT,      BIDE,         SKULL_BASH,   \
-	     REST,         SUBSTITUTE,   CUT
+	     REST,         SUBSTITUTE,   CUT,          PAY_DAY
 	; end
 
 	db BANK(ParasectPicFront)

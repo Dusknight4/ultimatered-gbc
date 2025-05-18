@@ -489,12 +489,21 @@ ScytherEvosMoves:
 ; Evolutions
 	db 0
 ; Learnset
-	db 17, LEER
-	db 20, FOCUS_ENERGY
+	db 16, LEECH_LIFE
+	db 18, TWINEEDLE
+	db 19, LEER
 	db 24, DOUBLE_TEAM
+	db 28, DOUBLE_KICK
 	db 29, SLASH
+	db 30, LEECH_LIFE
 	db 35, SWORDS_DANCE
+	db 38, TWINEEDLE
+	db 40, CLAMP
 	db 42, AGILITY
+	db 49, LEECH_LIFE
+	db 50, SPIKE_CANNON
+	db 75, DOUBLE_EDGE
+	db 90, HYPER_BEAM
 	db 0
 
 StaryuEvosMoves:
@@ -527,9 +536,11 @@ PinsirEvosMoves:
 ; Evolutions
 	db 0
 ; Learnset
+	db 15, LEECH_LIFE
+	db 22, CLAMP
 	db 25, SEISMIC_TOSS
 	db 30, GUILLOTINE
-	db 36, FOCUS_ENERGY
+	db 35, DIG
 	db 43, HARDEN
 	db 49, SLASH
 	db 54, SWORDS_DANCE
@@ -709,8 +720,12 @@ ArbokEvosMoves:
 	db 10, POISON_STING
 	db 17, BITE
 	db 27, GLARE
+	db 30, WRAP
 	db 36, SCREECH
+	db 42, SLUDGE
+	db 45, DIG
 	db 47, ACID
+	db 50, WRAP
 	db 0
 
 ParasectEvosMoves:
@@ -907,10 +922,13 @@ VenonatEvosMoves:
 	db EVOLVE_LEVEL, 31, VENOMOTH
 	db 0
 ; Learnset
+	db 20, ABSORB
 	db 24, POISONPOWDER
 	db 27, LEECH_LIFE
 	db 30, STUN_SPORE
+	db 32, SLUDGE
 	db 35, PSYBEAM
+	db 40, MEGA_DRAIN
 	db 38, SLEEP_POWDER
 	db 43, PSYCHIC_M
 	db 0
@@ -1146,8 +1164,12 @@ KabutopsEvosMoves:
 ; Learnset
 	db 34, ABSORB
 	db 39, SLASH
+	db 43, MEGA_DRAIN
 	db 46, LEER
+	db 50, ROCK_SLIDE
 	db 53, HYDRO_PUMP
+	db 70, BLIZZARD
+	db 90, HYPER_BEAM
 	db 0
 
 HorseaEvosMoves:
@@ -1335,9 +1357,12 @@ EkansEvosMoves:
 ; Learnset
 	db 10, POISON_STING
 	db 17, BITE
+	db 20, WRAP
 	db 24, GLARE
+	db 28, SLUDGE
 	db 31, SCREECH
 	db 38, ACID
+	db 40, DIG
 	db 0
 
 ParasEvosMoves:
@@ -1378,6 +1403,8 @@ WeedleEvosMoves:
 	db EVOLVE_LEVEL, 7, KAKUNA
 	db 0
 ; Learnset
+	db 2, TACKLE
+	db 5, TACKLE
 	db 0
 
 KakunaEvosMoves:
@@ -1385,18 +1412,25 @@ KakunaEvosMoves:
 	db EVOLVE_LEVEL, 10, BEEDRILL
 	db 0
 ; Learnset
+	db 1, POISON_STING
 	db 0
 
 BeedrillEvosMoves:
 ; Evolutions
 	db 0
 ; Learnset
+	db 11, SPIKE_CANNON
 	db 12, FURY_ATTACK
-	db 16, FOCUS_ENERGY
+	db 16, SPIKE_CANNON
 	db 20, TWINEEDLE
+	db 24, DRILL_PECK
 	db 25, RAGE
+	db 28, SLUDGE
 	db 30, PIN_MISSILE
 	db 35, AGILITY
+	db 40, SPIKE_CANNON
+	db 50, HORN_DRILL
+	db 90, HYPER_BEAM
 	db 0
 
 MissingNo73EvosMoves:
@@ -1492,13 +1526,16 @@ ButterfreeEvosMoves:
 ; Evolutions
 	db 0
 ; Learnset
+	db 11, LEECH_LIFE
 	db 12, CONFUSION
+	db 13, GUST
 	db 15, POISONPOWDER
 	db 16, STUN_SPORE
 	db 17, SLEEP_POWDER
 	db 21, SUPERSONIC
 	db 26, WHIRLWIND
 	db 32, PSYBEAM
+	db 40, PSYCHIC_M
 	db 0
 
 MachampEvosMoves:
@@ -1617,6 +1654,7 @@ KinglerEvosMoves:
 ; Learnset
 	db 20, VICEGRIP
 	db 25, GUILLOTINE
+	db 30, CLAMP
 	db 34, STOMP
 	db 42, CRABHAMMER
 	db 49, HARDEN

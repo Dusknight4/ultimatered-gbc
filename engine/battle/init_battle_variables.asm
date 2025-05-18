@@ -11,7 +11,7 @@ InitBattleVariables:
 	ld [hl], a
 	ld [wListScrollOffset], a
 	ld [wCriticalHitOrOHKO], a
-	ld [wBattleMonSpecies], a
+	ld [wBattleMonDVs + 1], a
 	ld [wPartyGainExpFlags], a
 	ld [wPlayerMonNumber], a
 	ld [wEscapedFromBattle], a
