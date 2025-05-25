@@ -75,12 +75,10 @@ TransformEffect_:
 	ld [wTransformedEnemyMonOriginalDVs + 1], a
 	dec de
 .next
-; DVs
-	ld a, [hli]
-	ld [de], a
+; Skip copying DVs to preserve original color palette
+	inc hl
+	inc hl
 	inc de
-	ld a, [hli]
-	ld [de], a
 	inc de
 ; Attack, Defense, Speed, and Special stats
 	inc hl
