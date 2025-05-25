@@ -828,9 +828,13 @@ FaintEnemyPokemon:
 	jr z, .giveExpToMonsThatFought ; if no exp all, then jump
 
 ; the player has exp all
-; first, we halve the values that determine exp gain
+; first, we save and then halve the values that determine exp gain
 ; the enemy mon base stats are added to stat exp, so they are halved
 ; the base exp (which determines normal exp) is also halved
+
+	ld a, [wEnemyMonBaseExp]       ; store full base EXP
+	ld [wLastFieldMoveID], a       ; use unused byte as temporary
+
 	ld hl, wEnemyMonBaseStats
 	ld b, NUM_STATS + 2
 .halveExpDataLoop
@@ -845,6 +849,10 @@ FaintEnemyPokemon:
 	callfar GainExperience
 	pop af
 	ret z ; return if no EXP.ALL
+
+	; restore full EXP before second call
+	ld a, [wLastFieldMoveID]
+	ld [wEnemyMonBaseExp], a
 
 	ld a, TRUE
 	ld [wBoostExpByExpAll], a
