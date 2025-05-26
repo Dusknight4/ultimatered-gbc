@@ -873,6 +873,11 @@ FaintEnemyPokemon:
 
 .check2
 	; Slot 2 (bit 1)
+
+	ld a, [wPartyCount]
+	cp 2
+	jr c, .check3
+
 	ld hl, wPartyMon2HP
 	ld a, [hl]
 	inc hl
@@ -884,6 +889,11 @@ FaintEnemyPokemon:
 
 .check3
 	; Slot 3 (bit 2)
+
+	ld a, [wPartyCount]
+	cp 3
+	jr c, .check4
+
 	ld hl, wPartyMon3HP
 	ld a, [hl]
 	inc hl
@@ -895,6 +905,11 @@ FaintEnemyPokemon:
 
 .check4
 	; Slot 4 (bit 3)
+
+	ld a, [wPartyCount]
+	cp 4
+	jr c, .check5
+
 	ld hl, wPartyMon4HP
 	ld a, [hl]
 	inc hl
@@ -906,6 +921,11 @@ FaintEnemyPokemon:
 
 .check5
 	; Slot 5 (bit 4)
+
+	ld a, [wPartyCount]
+	cp 5
+	jr c, .check6
+
 	ld hl, wPartyMon5HP
 	ld a, [hl]
 	inc hl
@@ -917,6 +937,11 @@ FaintEnemyPokemon:
 
 .check6
 	; Slot 6 (bit 5)
+
+	ld a, [wPartyCount]
+	cp 6
+	jr c, .done
+
 	ld hl, wPartyMon6HP
 	ld a, [hl]
 	inc hl
