@@ -483,6 +483,8 @@ GastlyEvosMoves:
 ; Learnset
 	db 27, HYPNOSIS
 	db 35, DREAM_EATER
+	db 40, SLUDGE
+	db 45, PSYCHIC_M
 	db 0
 
 ScytherEvosMoves:
@@ -528,8 +530,9 @@ BlastoiseEvosMoves:
 	db 15, WATER_GUN
 	db 24, BITE
 	db 31, WITHDRAW
-	db 42, SKULL_BASH
+	db 42, ICE_PUNCH
 	db 52, HYDRO_PUMP
+	db 55, SURF
 	db 0
 
 PinsirEvosMoves:
@@ -588,9 +591,12 @@ OnixEvosMoves:
 ; Learnset
 	db 15, BIND
 	db 19, ROCK_THROW
+	db 20, HARDEN
 	db 25, RAGE
 	db 33, SLAM
-	db 43, HARDEN
+	db 43, BIND
+	db 45, ROCK_SLIDE
+	db 50, EARTHQUAKE
 	db 0
 
 FearowEvosMoves:
@@ -774,6 +780,8 @@ GolemEvosMoves:
 	db 29, HARDEN
 	db 36, EARTHQUAKE
 	db 43, EXPLOSION
+	db 48, ROCK_THROW
+	db 52, ROCK_SLIDE
 	db 0
 
 MissingNo32EvosMoves:
@@ -1543,10 +1551,14 @@ MachampEvosMoves:
 	db 0
 ; Learnset
 	db 20, LOW_KICK
+	db 25, COMET_PUNCH
 	db 25, LEER
-	db 36, FOCUS_ENERGY
-	db 44, SEISMIC_TOSS
+	db 35, COMET_PUNCH
+	db 40, SEISMIC_TOSS
+	db 45, KARATE_CHOP
+	db 49, ROCK_THROW
 	db 52, SUBMISSION
+	db 55, COMET_PUNCH
 	db 0
 
 MissingNo7FEvosMoves:
@@ -1735,7 +1747,10 @@ HaunterEvosMoves:
 	db 0
 ; Learnset
 	db 29, HYPNOSIS
+	db 35, LICK
 	db 38, DREAM_EATER
+	db 45, PSYCHIC_M
+	db 52, SLUDGE
 	db 0
 
 AbraEvosMoves:

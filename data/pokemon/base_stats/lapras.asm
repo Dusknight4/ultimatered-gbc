@@ -1,11 +1,11 @@
 	db DEX_LAPRAS ; pokedex id
 
-	db 130,  85,  80,  60,  95
+	db 165,  85,  80,  60,  95
 	;   hp  atk  def  spd  spc
 
 	db WATER, ICE ; type
 	db 45 ; catch rate
-	db 219 ; base exp
+	db 249 ; base exp
 
 IF GEN_2_GRAPHICS
 	INCBIN "gfx/pokemon/gsfront/lapras.pic", 0, 1 ; sprite dimensions

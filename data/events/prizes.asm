@@ -7,7 +7,7 @@ NoThanksText:
 	db "NO THANKS@"
 
 PrizeMenuMon1Entries:
-	db ABRA
+	db EKANS
 	db MEOWTH
 IF DEF(_RED)
 	db NIDORINA

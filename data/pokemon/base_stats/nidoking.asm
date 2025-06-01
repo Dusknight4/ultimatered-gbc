@@ -1,6 +1,6 @@
 	db DEX_NIDOKING ; pokedex id
 
-	db  81,  92,  77,  85,  75
+	db  111, 119, 77,  85,  75
 	;   hp  atk  def  spd  spc
 
 	db POISON, GROUND ; type

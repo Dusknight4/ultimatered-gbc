@@ -19,7 +19,7 @@ LoneMoves:
 TeamMoves:
 	; trainer, move
 	db LORELEI, BLIZZARD
-	db BRUNO,   FISSURE
-	db AGATHA,  TOXIC
-	db LANCE,   BARRIER
+	db BRUNO,   STRENGTH
+	db AGATHA,  SLUDGE
+	db LANCE,   THUNDERBOLT
 	db -1 ; end
