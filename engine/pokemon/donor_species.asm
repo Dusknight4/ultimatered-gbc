@@ -3,7 +3,7 @@ SECTION "Donor Species", ROMX
 ; Every Pokemon has a donor (template) species: its Speed/Special DV byte,
 ; read as a Gen 2 Pokedex number. This works exactly like UltimateCrystal
 ; and UltimateGold, so traded Pokemon keep the same types and moves:
-; - Attack DV 1-15: type 1 comes from the donor
+; - Attack DV 8-15: type 1 comes from the donor
 ; - odd Defense DV: type 2 comes from the donor
 ; - Speed/Special DV 0: pure ??? (CURSE_TYPE)
 ; - donor 1-151: that Gen 1 species, 152-251: Gen 2 data in this bank
@@ -43,7 +43,7 @@ ApplyDonorTypes:
 	ld c, [hl]
 	pop hl
 	ld a, [de] ; Attack/Defense DV byte
-	and $f0
+	bit 7, a
 	jr z, .keep_type_1
 	ld [hl], b
 .keep_type_1
