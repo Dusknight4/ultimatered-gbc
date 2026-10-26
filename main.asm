@@ -394,3 +394,5 @@ INCLUDE "engine/overworld/elevator.asm"
 INCLUDE "engine/items/tm_prices.asm"
 
 INCLUDE "color/animations.asm"
+
+INCLUDE "engine/pokemon/donor_species.asm"

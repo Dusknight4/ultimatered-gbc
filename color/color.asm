@@ -120,6 +120,27 @@ SetPal_Battle_Common:
 	ld e, 1
 	farcall LoadSGBPalette
 
+	; Pokemon get their colors from their DVs, like in UltimateCrystal.
+	; Trainer pics keep the palettes above (no species / Speed/Special DV 0).
+	xor a
+	ldh [rSVBK], a
+	ld a, [wBattleMonSpecies]
+	and a
+	jr z, .noPlayerMon
+	ld hl, wBattleMonDVs
+	ld e, 0
+	call LoadDonorMonPalette
+.noPlayerMon
+	ld a, [wEnemyMonDVs + 1]
+	and a
+	jr z, .noEnemyMon
+	ld hl, wEnemyMonDVs
+	ld e, 1
+	call LoadDonorMonPalette
+.noEnemyMon
+	ld a, 2
+	ldh [rSVBK], a
+
 	; Player lifebar
 	ld a, [wPlayerHPBarColor]
 	add PAL_GREENBAR
@@ -268,30 +289,13 @@ SetPal_TownMap:
 
 ; Status screen
 SetPal_StatusScreen:
-	ld a, [wMonDataLocation]
-	and $f
-	ld hl, $D187              ; Speed/Special DV of PartyMon1
-	ld bc, $2C                ; PARTYMON_STRUCT_LENGTH
-	jr z, .gotBase
-	ld hl, wBoxMon1DVs + 1    ; Speed/Special DV of BoxMon1
-	ld bc, BOXMON_STRUCT_LENGTH
-.gotBase
-	ld a, [wWhichPokemon]
-	call AddNTimes            ; HL = pointer to desired Speed/Special DV
-	ld a, [hl]                ; A = DV value
-
-	cp NUM_POKEMON_INDEXES + 1
-	jr c, .pokemon
-	ld a, $01                 ; fallback palette
-.pokemon:
-	call DeterminePaletteID   ; map DV to color palette
-	ld b, a
+	; Pokemon palette from the DVs of the mon on the status screen
+	ld hl, wLoadedMonDVs
+	ld e, 0
+	call LoadDonorMonPalette
 
 	ld a, $02
 	ldh [rSVBK], a
-
-	push bc                  ; only if this is called as a function
-
 
 	; Load Lifebar palette
 	ld a, [wStatusScreenHPBarColor]
@@ -305,12 +309,6 @@ IF GEN_2_GRAPHICS
 	ld e, 4
 	farcall LoadSGBPalette
 ENDC
-
-	; Load pokemon palette
-	pop af
-	ld d, a
-	ld e, 0
-	farcall LoadSGBPalette
 
 
 	; Set palette map
@@ -738,24 +736,22 @@ SetPal_PokemonWholeScreen:
 	ld a, PAL_MEWMON
 	jr z, .loadPalette
 
-	; mimic status screen logic
+	; Pokemon palette from the DVs of party/box mon [wWhichPokemon]
 	ld a, [wMonDataLocation]
 	and $f
-	ld hl, $D187              ; Speed/Special DV of PartyMon1 (bank 0, safe hardcoded address)
-	ld bc, $2C                ; PARTYMON_STRUCT_LENGTH
+	ld hl, wPartyMon1DVs
+	ld bc, wPartyMon2 - wPartyMon1
 	jr z, .gotBase
-	ld hl, wBoxMon1DVs + 1    ; Speed/Special DV of BoxMon1
-	ld bc, BOXMON_STRUCT_LENGTH
+	ld hl, wBoxMon1DVs
+	ld bc, wBoxMon2 - wBoxMon1
 .gotBase
 	ld a, [wWhichPokemon]
-	call AddNTimes            ; HL = pointer to desired Speed/Special DV
-	ld a, [hl]                ; A = DV value (Speed/Special)
-
-	cp NUM_POKEMON_INDEXES + 1
-	jr c, .pokemon
-	ld a, $01                 ; fallback palette
-.pokemon:
-	call DetermineBackSpritePaletteID ; map DV → palette
+	call AddNTimes
+	ld e, 0
+	call LoadDonorMonPalette
+	ld a, 2
+	ldh [rSVBK], a
+	jr .loadOtherPalettes
 
 .loadPalette
 	ld d, a
@@ -764,6 +760,8 @@ SetPal_PokemonWholeScreen:
 
 	ld e, 0
 	farcall LoadSGBPalette
+
+.loadOtherPalettes
 
 	ld d, PAL_MEWMON
 	ld e, 1
@@ -969,6 +967,88 @@ LoadTitleMonTilesAndPalettes:
 	pop de
 	farcall TitleScroll ; removed from caller to make space for hook
 	ret
+
+; Load the colors of the Pokemon whose DVs are at hl into BG palette e,
+; the same way UltimateCrystal and UltimateGold color Pokemon:
+; - the Speed/Special DV byte picks the palette (0 = the player's palette)
+; - Defense DV 8-15 uses the shiny colors
+; - even Attack DV swaps the two middle colors
+LoadDonorMonPalette:
+	; The stack is in switchable WRAM, so keep the WRAM bank in c, not on the stack.
+	ldh a, [rSVBK]
+	ld c, a
+	xor a
+	ldh [rSVBK], a ; the DVs may be in WRAM bank 1
+	ld a, [hli]
+	ld b, a ; Attack/Defense DV byte
+	ld a, [hl] ; Speed/Special DV byte
+	ld hl, DVPlayerPalette
+	and a
+	jr z, .got_colors
+	ld l, a
+	ld h, 0
+	add hl, hl
+	ld a, b
+	and $f
+	cp 8
+	jr c, .not_shiny
+	inc hl
+.not_shiny
+	add hl, hl
+	add hl, hl
+	ld a, e
+	ld de, MonDVPalettes
+	add hl, de
+	ld e, a
+.got_colors
+	ld a, e
+	add a
+	add a
+	add a
+	ld e, a
+	ASSERT LOW(W2_BgPaletteData) == 0
+	ld d, HIGH(W2_BgPaletteData)
+	ld a, 2
+	ldh [rSVBK], a
+	ld a, $ff ; white
+	ld [de], a
+	inc de
+	ld a, $7f
+	ld [de], a
+	inc de
+	bit 4, b ; odd Attack DV keeps the normal order
+	jr nz, .normal_order
+	inc hl
+	inc hl
+	call .CopyColor
+	dec hl
+	dec hl
+	dec hl
+	dec hl
+	call .CopyColor
+	jr .black
+.normal_order
+	call .CopyColor
+	call .CopyColor
+.black
+	xor a
+	ld [de], a
+	inc de
+	ld [de], a
+	ld a, c
+	ldh [rSVBK], a
+	ret
+
+.CopyColor:
+	ld a, [hli]
+	ld [de], a
+	inc de
+	ld a, [hli]
+	ld [de], a
+	inc de
+	ret
+
+INCLUDE "data/pokemon/dv_palettes.asm"
 
 
 ; Everything else goes in bank $2C (unused by original game)

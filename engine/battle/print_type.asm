@@ -1,9 +1,19 @@
 ; [wCurSpecies] = pokemon ID
 ; hl = dest addr
+PrintDonorMonType:
+; like PrintMonType, but with the types the mon in wLoadedMon gets
+; from its donor species, as in battle
+	call GetPredefRegisters
+	push hl
+	call GetMonHeader
+	farcall ApplyDonorTypes_MonHeader
+	jr PrintMonType.gotHeader
+
 PrintMonType:
 	call GetPredefRegisters
 	push hl
 	call GetMonHeader
+.gotHeader
 	pop hl
 	push hl
 	ld a, [wMonHType1]

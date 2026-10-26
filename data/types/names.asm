@@ -11,9 +11,10 @@ TypeNames:
 	dw .Bug
 	dw .Ghost
 
-REPT UNUSED_TYPES_END - UNUSED_TYPES
+REPT CURSE_TYPE - UNUSED_TYPES
 	dw .Normal
 ENDR
+	dw .CurseType
 
 	dw .Fire
 	dw .Water
@@ -41,3 +42,4 @@ ENDR
 .Bug:      db "BUG@"
 .Ghost:    db "GHOST@"
 .Dragon:   db "DRAGON@"
+.CurseType: db "???@"

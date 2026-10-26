@@ -319,9 +319,51 @@ Evolution_ReloadTilesetTilePatterns:
 	jp ReloadTilesetTilePatterns
 
 LearnMoveFromLevelUp:
-	ld hl, EvosMovesPointerTable
 	ld a, [wPokedexNum] ; species
 	ld [wCurPartySpecies], a
+	call .LearnSpeciesMoves
+
+; Then the donor species (Speed/Special DV byte), like in UltimateCrystal:
+; 1-151 use that species' learnset, 152-251 their Gen 2 learnset.
+	ld a, [wWhichPokemon]
+	ld hl, wPartyMon1DVs + 1
+	ld bc, wPartyMon2 - wPartyMon1
+	call AddNTimes
+	ld a, [hl]
+	and a
+	jr z, .done
+	cp 252
+	jr nc, .done
+	cp NUM_POKEMON + 1
+	jr nc, .gen2Donor
+	ld [wPokedexNum], a
+	farcall PokedexToIndex
+	ld a, [wPokedexNum]
+	call .LearnSpeciesMoves
+	jr .done
+
+.gen2Donor
+	ld d, a
+	ld e, 0 ; matches to skip
+.gen2DonorLoop
+	push de
+	farcall GetGen2DonorLevelUpMove
+	jr nc, .gen2DonorDone
+	call .TryLearnMove
+	pop de
+	inc e
+	jr .gen2DonorLoop
+
+.gen2DonorDone
+	pop de
+.done
+	ld a, [wCurPartySpecies]
+	ld [wPokedexNum], a
+	ret
+
+.LearnSpeciesMoves:
+; offers every move species a learns at level [wCurEnemyLevel],
+; like UltimateCrystal
 	dec a
 	ld bc, 0
 	ld hl, EvosMovesPointerTable
@@ -339,13 +381,20 @@ LearnMoveFromLevelUp:
 .learnSetLoop ; loop over the learn set until we reach a move that is learnt at the current level or the end of the list
 	ld a, [hli]
 	and a ; have we reached the end of the learn set?
-	jr z, .done ; if we've reached the end of the learn set, jump
+	ret z
 	ld b, a ; level the move is learnt at
 	ld a, [wCurEnemyLevel]
 	cp b ; is the move learnt at the mon's current level?
 	ld a, [hli] ; move ID
 	jr nz, .learnSetLoop
 	ld d, a ; ID of move to learn
+	push hl
+	call .TryLearnMove
+	pop hl
+	jr .learnSetLoop
+
+.TryLearnMove:
+; learns move d unless the mon already knows it
 	ld a, [wMonDataLocation]
 	and a
 	jr nz, .next
@@ -362,7 +411,7 @@ LearnMoveFromLevelUp:
 .checkCurrentMovesLoop ; check if the move to learn is already known
 	ld a, [hli]
 	cp d
-	jr z, .done ; if already known, jump
+	ret z ; already known
 	dec b
 	jr nz, .checkCurrentMovesLoop
 	ld a, d
@@ -370,11 +419,7 @@ LearnMoveFromLevelUp:
 	ld [wNamedObjectIndex], a
 	call GetMoveName
 	call CopyToStringBuffer
-	predef LearnMove
-.done
-	ld a, [wCurPartySpecies]
-	ld [wPokedexNum], a
-	ret
+	predef_jump LearnMove
 
 ; writes the moves a mon has at level [wCurEnemyLevel] to [de]
 ; move slots are being filled up sequentially and shifted if all slots are full

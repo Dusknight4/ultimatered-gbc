@@ -12,6 +12,7 @@ InitBattleVariables:
 	ld [wListScrollOffset], a
 	ld [wCriticalHitOrOHKO], a
 	ld [wBattleMonDVs + 1], a
+	ld [wBattleMonSpecies], a ; no Pokemon out yet: show the player's palette
 	ld [wPartyGainExpFlags], a
 	ld [wPlayerMonNumber], a
 	ld [wEscapedFromBattle], a

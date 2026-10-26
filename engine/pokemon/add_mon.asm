@@ -75,9 +75,7 @@ _AddPartyMon::
 	push hl
 	ld a, [wMonDataLocation]
 	and $f
-	ld a, ATKDEFDV_TRAINER  ; set enemy trainer mon IVs to fixed average values
-	ld b, SPDSPCDV_TRAINER
-	jr nz, .next4
+	jr nz, .randomDVs ; enemy trainer mons get random DVs, kept for the whole battle
 
 ; If the mon is being added to the player's party, update the pokedex.
 	ld a, [wCurPartySpecies]
@@ -111,6 +109,7 @@ _AddPartyMon::
 	jr nz, .copyEnemyMonData
 
 ; Not wild.
+.randomDVs
 	call Random ; generate random IVs
 	ld b, a
 	call Random

@@ -1762,6 +1762,7 @@ LoadBattleMonFromParty:
 	ld [hli], a
 	dec b
 	jr nz, .statModLoop
+	farcall ApplyDonorTypes_BattleMon
 	ret
 
 ; copies from enemy party data to current enemy mon data when sending out a new enemy mon
@@ -1816,6 +1817,7 @@ LoadEnemyMonFromParty:
 	jr nz, .statModLoop
 	ld a, [wWhichPokemon]
 	ld [wEnemyMonPartyPos], a
+	farcall ApplyDonorTypes_EnemyMon
 	ret
 
 SendOutMon:
@@ -6238,32 +6240,22 @@ LoadEnemyMonData:
 	jr nz, .storeDVs
 	ld a, [wIsInBattle]
 	cp $2 ; is it a trainer battle?
-; random DVs for trainer mon
-.GenerateTrainerFirstByte:
+	jr nz, .wildDVs
+; trainer mons keep the random DVs rolled when their party was built,
+; so their types and colors don't change when they switch
+	ld hl, wEnemyMon1DVs
+	ld a, [wWhichPokemon]
+	ld bc, wEnemyMon2 - wEnemyMon1
+	call AddNTimes
+	ld a, [hli]
+	ld b, [hl]
+	jr .storeDVs
+
+; random DVs for wild mon (every Speed/Special DV has its own palette now)
+.wildDVs
 	call BattleRandom
-	cp $0
-	jr c, .GenerateTrainerFirstByte
-	cp $97
-	jr nc, .GenerateTrainerFirstByte
-	ld b, a                     ; constrained Speed/Special
-
-	;call BattleRandom
-	ld a, $99                     ; Atk/Def (no constraint)
-	jr z, .storeDVs
-
-; random DVs for wild mon
-.GenerateFirstByte:
+	ld b, a
 	call BattleRandom
-	cp $0
-	jr c, .GenerateFirstByte    ; retry if less than $25
-	cp $97
-	jr nc, .GenerateFirstByte   ; retry if >= $EC (must be < EC to be ≤ EB)
-	ld b, a                     ; store constrained value for Speed/Special
-
-	call BattleRandom           ; second, fully random byte (Atk/Def)
-	ld hl, wEnemyMonDVs
-	ld [hli], a                 ; store Atk/Def
-	ld [hl], b                  ; store Speed/Special (constrained)
 
 .storeDVs
 	ld hl, wEnemyMonDVs
@@ -6277,16 +6269,6 @@ LoadEnemyMonData:
 	ld hl, wEnemyMonHP
 	push hl
 	call CalcStats
-	; Update the party struct's HP with the newly calculated Max HP
-	ld hl, wEnemyMon1HP
-	ld a, [wWhichPokemon]
-	ld bc, wEnemyMon2 - wEnemyMon1
-	call AddNTimes
-	ld a, [wEnemyMonMaxHP]
-	ld [hli], a
-	ld a, [wEnemyMonMaxHP + 1]
-	ld [hli], a
-
 	pop hl
 	ld a, [wIsInBattle]
 	cp $2 ; is it a trainer battle?
@@ -6331,6 +6313,9 @@ LoadEnemyMonData:
 	ld a, [hli]            ; copy catch rate
 	ld [de], a
 	inc de
+	push de
+	farcall ApplyDonorTypes_EnemyMon
+	pop de
 	ld a, [wIsInBattle]
 	cp $2 ; is it a trainer battle?
 	jr nz, .copyStandardMoves

@@ -13,7 +13,8 @@ DEF PHYSICAL EQU const_value
 	const GHOST        ; $08
 
 DEF UNUSED_TYPES EQU const_value
-	const_next 20
+	const_next 19
+	const CURSE_TYPE   ; $13 (???, donated by Speed/Special DV 0)
 DEF UNUSED_TYPES_END EQU const_value
 
 DEF SPECIAL EQU const_value
