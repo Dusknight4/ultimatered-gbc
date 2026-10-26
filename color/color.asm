@@ -131,9 +131,24 @@ SetPal_Battle_Common:
 	ld e, 0
 	call LoadDonorMonPalette
 .noPlayerMon
+	; Speed/Special DV 0 (also the trainer pic) shows the trainer's palette in
+	; UltimateCrystal. In wild battles that is the player palette, which
+	; LoadDonorMonPalette uses for DV 0 too.
 	ld a, [wEnemyMonDVs + 1]
 	and a
-	jr z, .noEnemyMon
+	jr nz, .enemyMonPalette
+	ld a, [wIsInBattle]
+	cp 2 ; trainer battle?
+	jr nz, .enemyMonPalette
+	; keep the trainer palette, but swap its colors on an even Attack DV
+	; (the trainer pic itself uses $ff DVs)
+	ld a, [wEnemyMonDVs]
+	bit 4, a
+	jr nz, .noEnemyMon
+	ld e, 1
+	call SwapMonPaletteColors
+	jr .noEnemyMon
+.enemyMonPalette
 	ld hl, wEnemyMonDVs
 	ld e, 1
 	call LoadDonorMonPalette
@@ -1046,6 +1061,36 @@ LoadDonorMonPalette:
 	ld a, [hli]
 	ld [de], a
 	inc de
+	ret
+
+; Swap the two middle colors of BG palette e.
+SwapMonPaletteColors:
+	ldh a, [rSVBK]
+	ld c, a
+	ld a, 2
+	ldh [rSVBK], a
+	ld a, e
+	add a
+	add a
+	add a
+	add 2 ; color 1
+	ld l, a
+	ASSERT LOW(W2_BgPaletteData) == 0
+	ld h, HIGH(W2_BgPaletteData)
+	ld d, h
+	add 2 ; color 2
+	ld e, a
+REPT PAL_COLOR_SIZE
+	ld a, [de]
+	ld b, a
+	ld a, [hl]
+	ld [de], a
+	ld a, b
+	ld [hli], a
+	inc de
+ENDR
+	ld a, c
+	ldh [rSVBK], a
 	ret
 
 INCLUDE "data/pokemon/dv_palettes.asm"

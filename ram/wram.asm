@@ -1671,6 +1671,11 @@ wPrize3Price:: dw
 
 ; shared list of 9 random numbers, indexed by wLinkBattleRandomNumberListIndex
 wLinkBattleRandomNumberList:: ds 10
+
+NEXTU
+; a wild mon's moves when it appears (wild battles never use the link data
+; above), so catching it keeps them even after Mimic or Transform
+wWildMonMoves:: ds NUM_MOVES
 ENDU
 
 wSerialPlayerDataBlock:: ; ds $1a8

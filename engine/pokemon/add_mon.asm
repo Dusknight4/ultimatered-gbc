@@ -170,6 +170,17 @@ _AddPartyMon::
 	ld a, [hli]       ; catch rate (held item in gen 2)
 	ld [de], a
 	ld hl, wMonHMoves
+; A mon caught in battle keeps the moves it had there (its donor move mix).
+	ld c, 0
+	ld a, [wIsInBattle]
+	and a
+	jr z, .gotMoves
+	ld a, [wMonDataLocation]
+	and $f
+	jr nz, .gotMoves
+	ld hl, wEnemyMonMoves
+	inc c
+.gotMoves
 	ld a, [hli]
 	inc de
 	push de
@@ -187,9 +198,13 @@ _AddPartyMon::
 	dec de
 	dec de
 	dec de
+	ld a, c
+	and a
+	jr nz, .keptMoves
 	xor a
 	ld [wLearningMovesFromDayCare], a
 	predef WriteMonMoves
+.keptMoves
 	pop de
 	ld a, [wPlayerID]  ; set trainer ID to player ID
 	inc de

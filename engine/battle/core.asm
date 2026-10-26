@@ -6347,6 +6347,14 @@ LoadEnemyMonData:
 	xor a
 	ld [wLearningMovesFromDayCare], a
 	predef WriteMonMoves ; get moves based on current level
+	farcall MixDonorStartingMoves
+	ld a, [wEnemyBattleStatus3]
+	bit TRANSFORMED, a ; also set when reloading a caught mon
+	jr nz, .loadMovePPs
+	ld hl, wEnemyMonMoves
+	ld de, wWildMonMoves
+	ld bc, NUM_MOVES
+	call CopyData
 .loadMovePPs
 	ld hl, wEnemyMonMoves
 	ld de, wEnemyMonPP - 1
@@ -6947,6 +6955,7 @@ DetermineWildOpponent:
 		ldh [hStartTileID], a
 		dec a
 		ld [wAICount], a
+		ld [wEnemyMonDVs], a ; trainer pic: no color swap
 		hlcoord 12, 0
 		predef CopyUncompressedPicToTilemap
 		ld a, $ff

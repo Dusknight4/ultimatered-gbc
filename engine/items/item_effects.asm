@@ -499,6 +499,16 @@ ItemUseBall:
 	callfar LoadEnemyMonData
 	pop af
 	ld [wCurPartySpecies], a
+
+; Keep the moves it had when it appeared: reloading re-rolls its donor
+; move mix, and Mimic or Transform may have changed them in battle.
+	ld hl, wWildMonMoves
+	ld de, wEnemyMonMoves
+	ld bc, NUM_MOVES
+	call CopyData
+	ld hl, wEnemyMonMoves
+	ld de, wEnemyMonPP - 1
+	predef LoadMovePPs
 	pop hl
 	pop af
 	ld [hld], a

@@ -936,8 +936,8 @@ VenonatEvosMoves:
 	db 30, STUN_SPORE
 	db 32, SLUDGE
 	db 35, PSYBEAM
-	db 40, MEGA_DRAIN
 	db 38, SLEEP_POWDER
+	db 40, MEGA_DRAIN
 	db 43, PSYCHIC_M
 	db 0
 

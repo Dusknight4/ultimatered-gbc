@@ -3,6 +3,8 @@ _ScrollTrainerPicAfterBattle:
 ; the screen from the right.
 	xor a
 	ld [wEnemyMonDVs + 1], a
+	dec a
+	ld [wEnemyMonDVs], a ; trainer pic: no color swap
 	ld b, SET_PAL_BATTLE
 	call RunPaletteCommand
 	callfar _LoadTrainerPic

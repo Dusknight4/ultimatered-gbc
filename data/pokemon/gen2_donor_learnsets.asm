@@ -312,8 +312,8 @@ AriadosDonorLearnset:
 	db 21, BITE
 	db 25, LEECH_LIFE
 	db 30, SPIKE_CANNON
-	db 35, TWINEEDLE
 	db 34, FURY_SWIPES
+	db 35, TWINEEDLE
 	db 53, SCREECH
 	db 63, PSYCHIC_M
 	db 0 ; no more level-up moves
